@@ -5,8 +5,10 @@ The steganography process is implemented using the ImageJ processor
 # How to use
 Download and install Fiji from http://fiji.sc/Downloads
 Put the project folder into plugin directory
-  - cd /path-to-Fiji/plugins
+  - cd /path-to-fiji/plugins
   - git clone https://github.com/seppho/text-steganography
 Exec Fiji
+
 Open a image file from Fiji
+
 Select Steganography from plugin menu
