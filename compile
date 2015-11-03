@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir bin
+../../ImageJ-linux64 --javac -d . ./*.java
