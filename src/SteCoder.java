@@ -12,13 +12,13 @@ public class SteCoder implements ActionListener {
 	private HiddenMessage message;		// il messaggio da applicare all'interno
 	private ImageProcessor ip;
 	private ImageProperty stegoProperty;
-	
+
 	public SteCoder(CoverImage cover,HiddenMessage msg,ImageProperty steProperty){
 		this.message=msg;
 		this.cover=cover;
 		this.stegoProperty=steProperty;
 		}
-	
+
 	private void makeThumbnail(){
 		//MAKE THUMBNAIL
 		ImageProcessor thumb = this.cover.getProcessor();
@@ -29,22 +29,25 @@ public class SteCoder implements ActionListener {
 		//setto il nuovo processore
 		this.cover.setProcessor(thumb);
 	}
-	
+
 	@Override
-	public void actionPerformed(ActionEvent e) {		
+	public void actionPerformed(ActionEvent e) {
 		System.out.println(this.message.getText());
 		String stegoMessage=this.message.getText();
 		//this.makeThumbnail();
 		if(this.message.getText()=="")
 			this.message.setText("I'm Batman");
-		
+
 		this.ip=this.cover.getProcessor();
-		
+
 		LSBembedding cod = new LSBembedding(this.ip,this.cover.getImageProperty().getStegoProperty(),this.message.getText());
 		ImageProcessor stego = cod.getProcessor();
-		
+
+		/* only demo */
+		Roi roi=new Roi();
+		ImageProcessor cropped = cod.crop();
 		this.cover.setProcessor(stego);
-		
+
 	}
 
 }
