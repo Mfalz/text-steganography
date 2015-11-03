@@ -1,4 +1,4 @@
 #!/bin/bash
 
 mkdir bin
-../../ImageJ-linux64 --javac -d . ./*.java
+../../ImageJ-linux64 --javac -d . ./src/*.java
