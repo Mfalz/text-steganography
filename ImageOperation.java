@@ -1,4 +1,4 @@
-package steganography;
+
 
 import java.awt.Button;
 import java.awt.Color;

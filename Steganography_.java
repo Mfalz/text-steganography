@@ -1,10 +1,10 @@
-package steganography;
-import ij.IJ;
+
+
+
 import ij.ImagePlus;
 import ij.WindowManager;
-import ij.gui.GenericDialog;
+import ij.plugin.PlugIn;
 import ij.plugin.frame.PlugInFrame;
-import ij.plugin.*;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,61 +36,7 @@ public class Steganography_ extends PlugInFrame implements PlugIn{
         frame.setContentPane(m.mainPane);
         frame.pack();
         frame.setVisible(true);
-		System.out.println("Steganography.createAndShowGUI() all right");
-        /*
-        	//creo il menuBar
-      		JMenuBar mainMenuBar = new JMenuBar();
-      		mainMenuBar.setOpaque(true);
-      		mainMenuBar.setBackground(new Color(0x41, 0x41, 0x41));
-      		mainMenuBar.setPreferredSize(new Dimension(100, 40));
-      		
-      		//creo item menuBar
-      		JMenu fileMenu,stegoMenu;
-      		fileMenu=new JMenu("Immagine");
-      		fileMenu.setForeground(new Color(0xFF,0xFF,0xFF));
-      		//creo i sottomenu per file
-      		JMenuItem sub_fileMenu1=new JMenuItem("Carica Immagine",null);     		
-      		sub_fileMenu1.setText("Carica Immagine");
-
-      		//ancoro i sottomenu
-      		fileMenu.add(sub_fileMenu1);
-
-      		//ancoro i due menu al menubar
-      		mainMenuBar.add(fileMenu);
-
-      		//ancoro il menuBar al frame
-      		frame.setJMenuBar(mainMenuBar);
-
-      		// setto le azioni
-      		sub_fileMenu1.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    JFileChooser fc = new JFileChooser();
-                    
-                    int result = fc.showOpenDialog(null);
-                    if (result == JFileChooser.APPROVE_OPTION) {
-                        File file = fc.getSelectedFile();
-                        try {
-                        	//immagine
-                        	img = ImageIO.read(file);
-                        	
-                        } catch (IOException e) {
-                        	try {
-								img = ImageIO.read(new File("/home/seppho/lena.jpg"));
-								m=new mainPanel(img);
-						        
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-      	*/
-        
-        
-      	
+		//System.out.println("Steganography.createAndShowGUI() all right");
     }
 
 	public void run(String arg) {
@@ -101,7 +47,7 @@ public class Steganography_ extends PlugInFrame implements PlugIn{
 		BufferedImage img = imp.getBufferedImage();
 		imp.close();
 		createAndShowGUI(img);
-		System.out.println("Steganography.run() all right");
+		//System.out.println("Steganography.run() all right");
 	}
 
 	

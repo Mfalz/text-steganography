@@ -1,5 +1,3 @@
-package steganography;
-
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -12,15 +10,14 @@ import java.awt.image.BufferedImage;
 public class SteCoder implements ActionListener {
 	public CoverImage cover;			// la cover su cui lavorare
 	private HiddenMessage message;		// il messaggio da applicare all'interno
+	private ImageProcessor ip;
+	private ImageProperty stegoProperty;
 	
-	public SteCoder(CoverImage cover,HiddenMessage msg,int []stegoProperty){
+	public SteCoder(CoverImage cover,HiddenMessage msg,ImageProperty steProperty){
 		this.message=msg;
 		this.cover=cover;
-		
-		int capacity=stegoProperty[ImageProperty.CAPACITY];
-		int robustness=stegoProperty[ImageProperty.ROBUSTNESS];
-		int security=stegoProperty[ImageProperty.SECURITY];
-	}
+		this.stegoProperty=steProperty;
+		}
 	
 	private void makeThumbnail(){
 		//MAKE THUMBNAIL
@@ -37,9 +34,17 @@ public class SteCoder implements ActionListener {
 	public void actionPerformed(ActionEvent e) {		
 		System.out.println(this.message.getText());
 		String stegoMessage=this.message.getText();
+		//this.makeThumbnail();
+		if(this.message.getText()=="")
+			this.message.setText("I'm Batman");
 		
-		this.makeThumbnail();
-		this.cover.showImageInfo();
+		this.ip=this.cover.getProcessor();
+		
+		LSBembedding cod = new LSBembedding(this.ip,this.cover.getImageProperty().getStegoProperty(),this.message.getText());
+		ImageProcessor stego = cod.getProcessor();
+		
+		this.cover.setProcessor(stego);
+		
 	}
 
 }

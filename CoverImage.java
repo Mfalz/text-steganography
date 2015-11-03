@@ -1,5 +1,8 @@
-package steganography;
+
 import ij.ImagePlus;
+
+import ij.gui.HistogramWindow;
+import ij.gui.ImageWindow;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -31,7 +34,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-
 class ImageActions extends JPanel{
 	CoverImage ref;
 	
@@ -40,30 +42,30 @@ class ImageActions extends JPanel{
 		this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
 		
 		JButton coderButton = new JButton("Codifica");
-		JButton deCoderButton = new JButton("DeCodifica");
-		coderButton.addActionListener(new SteCoder(r,msg,property.getStegoProperty()));
-		deCoderButton.addActionListener(new StegoDeCoder(r));
+		//JButton deCoderButton = new JButton("DeCodifica");
+		JButton save = new JButton("Salva");
 		
+		ImageProcessor ref=r.getProcessor();
+		int[] prop=property.getStegoProperty();
+		coderButton.addActionListener(new SteCoder(r,msg,property));
+		
+		//deCoderButton.addActionListener(new StegoDeCoder(r,msg));
+		save.addActionListener(new Save(r));
 		//pannello dei bottoni
 		JPanel buttons=new JPanel();
 		buttons.add(coderButton);
-		buttons.add(deCoderButton);
+		//buttons.add(deCoderButton);
+		buttons.add(save);
 		this.add(buttons);
 	}
 }
-
-
-/* Questa classe implementa la cover su cui dovra' avvenire il processo steganografico 
- * La cover puo' essere in bianco e nero ( 8 bit )
- * 						in rgb ( 24 bit )
- * */
 
 public class CoverImage extends JPanel{
 	public BufferedImage coverImage; // la cover
 	public ImageProcessor processor; // processore sulla cover 
 	private JLabel imageLabel;       // il campo immagine 
-	ImageActions imageAct;           // il campo delle azioni sull'immagine
-	
+	private ImageActions imageAct;           // il campo delle azioni sull'immagine
+	private ImageProperty imageProperty;
 	
 	public ImageProcessor getProcessor(){//restituisce il processore su cui e' basata la cover
 		return this.processor;
@@ -86,32 +88,31 @@ public class CoverImage extends JPanel{
 		// mostro le informazioni riguardante l'immagine
 		this.showImageInfo();
 		
-		System.out.println("CoverImage.setImage() all right");
+		//System.out.println("CoverImage.setImage() all right");
 	}
 	
 	public void setImage(){//metodo di accesso per settare l'immagine in funzione del suo processore
 		this.setImage(this.processor.getBufferedImage());
 	}
 	
-	// costruttore
-	// una cover ha bisogno di un'immagine, delle proprieta' e di un messaggio da nasconderci dentro
 	public CoverImage(BufferedImage img,ImageProperty refProperty,HiddenMessage msg){
-		//TODO il processore dovrebbe cambiare in funzione della tipologia di immagine
-		//questa immagine ha questo processore
-		this.processor = new ColorProcessor(img);
-		this.imageLabel=new JLabel();// dove mettere l'immagine
 		
-		// setto il campo con le azioni, passandogli le informazioni utili
+		this.imageProperty=refProperty;
+		this.processor = new ColorProcessor(img);
+				
+		this.imageLabel=new JLabel();
+		
 		this.imageAct=new ImageActions(this,refProperty,msg);
 		
-		this.setImage();//setImage necessita di imageLabel istanziato
+		StegoDeCoder initialization = new StegoDeCoder(this,msg);
+		this.setImage();
 		
 		this.add(imageLabel);
 		this.add(imageAct);	
 		
 	}
 	
-	// grazie a MadProgrammer
+	// MadProgrammer
 	// http://stackoverflow.com/questions/14548808/scale-the-imageicon-automatically-to-label-size
 	public static BufferedImage resize(BufferedImage image, int width, int height) {
 	    BufferedImage bi = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
@@ -164,14 +165,24 @@ public class CoverImage extends JPanel{
 		rgb[ImageProperty.BLUE_CHANNEL]=new JLabel();
 		rgb[ImageProperty.BLUE_CHANNEL].setIcon(new ImageIcon(b_thumbnail));
 		
-		//aggiungo i 3 canali ad un unico pannello
 		JPanel channels_pane=new JPanel();
-		if(this.imageAct.getComponentCount()>1){
-			this.imageAct.remove(1);
-		}
-		for(int i=0;i<3;i++)
+		for(int i=0;i<3;i++){
 			channels_pane.add(rgb[i]);
+			rgb[i].setVisible(true);
+		}
+		
+		// make histogram
+		ImagePlus imp = new ImagePlus("The histogram",this.processor);
+		ImageWindow hw = (ImageWindow)new HistogramWindow(imp);
+		Component histogram_component = hw.getComponent(0);
+		hw.setVisible(false);
+		hw.dispose();
+		for(int i=1;i<this.imageAct.getComponentCount();i++)//rimuovo tutto cio' che gia' c'era
+			this.imageAct.remove(i);
+		
+		channels_pane.setVisible(true);
 		this.imageAct.add(channels_pane);
+		this.imageAct.add(histogram_component);
 	}
 	
 	
@@ -179,16 +190,11 @@ public class CoverImage extends JPanel{
 		ImageProcessor ip = this.getProcessor();
 		JPanel infoPane= new JPanel();
 		
-		//setto il layout in modo che sia dall'alto in basso
 		infoPane.setLayout(new GridLayout(4,1));
 				
-		//aggiungo i campo contenenti le info 
-		infoPane.add(new JTextField("Width= "+ip.getWidth()));
-		infoPane.add(new JTextField("Height= "+ip.getHeight()));
+		infoPane.add(new JTextField("WidthxHeight= "+ip.getWidth()+"x"+ip.getHeight()));
 		infoPane.add(new JTextField("Depth= "+ip.getBitDepth()));
-		infoPane.add(new JTextField("#Pixel= "+ip.getPixelCount()));
 		
-		//setto le proprieta' dei campi di testo
 		for(int i=0;i<infoPane.getComponentCount();i++)
 			try{
 				JTextField asd = (JTextField)infoPane.getComponent(i);
@@ -198,9 +204,18 @@ public class CoverImage extends JPanel{
 				break;
 			}
 		this.showChannelBits();
-		//se gia' esiste un infoPane
+		// exist infopane?
 		if(this.imageAct.getComponentCount()>2)
 			this.imageAct.remove(1);
 		this.imageAct.add(infoPane);		
+	}
+	
+	public ImageProperty getImageProperty(){
+		return this.imageProperty;
+	}
+	
+	public void setProperty(int[] property) {
+		//System.out.println("CoverImage.setProperty()");
+		this.imageProperty.setProperty(property);
 	}
 }

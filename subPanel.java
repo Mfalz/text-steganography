@@ -1,4 +1,4 @@
-package steganography;
+
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,20 +11,17 @@ import javax.swing.JPanel;
 
 public class subPanel extends JPanel{	
 	public subPanel(BufferedImage img){		
-		//Create a JPanel, and add the ConversionPanels to it.
-        //setPreferredSize(new Dimension(200,100));
 		ImageProperty imageProperty=new ImageProperty();	
 		ImageOperation imageOperation=new ImageOperation(imageProperty,img);		
 		
         setLayout(new BoxLayout(this,BoxLayout.LINE_AXIS));
-        imageProperty.setMaximumSize(new Dimension(300,500));
-		imageOperation.setMaximumSize(new Dimension(670,500));
-		
-        add(imageProperty);
-        add(imageOperation);
-        
+        imageProperty.setMaximumSize(new Dimension(300,200));
+		imageOperation.setMaximumSize(new Dimension(670,700));
         imageProperty.setAlignmentY(TOP_ALIGNMENT);
         imageOperation.setAlignmentY(TOP_ALIGNMENT);
+        
+        add(imageProperty);
+        add(imageOperation);
         
 	}
 }
