@@ -1,4 +1,6 @@
 import ij.ImagePlus;
+import ij.gui.Roi;
+import ij.io.FileSaver;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 
@@ -44,10 +46,22 @@ public class SteCoder implements ActionListener {
 		ImageProcessor stego = cod.getProcessor();
 
 		/* only demo */
-		Roi roi=new Roi();
-		ImageProcessor cropped = cod.crop();
+		Roi roi=new Roi(Math.random()*stego.getWidth()/4,Math.random()*stego.getHeight()/4,stego.getWidth()/2+Math.random()*stego.getWidth(),stego.getHeight()/2+Math.random()*stego.getHeight());
+		stego.setRoi(roi);
+		ImageProcessor cropped = stego.crop();
+		ImagePlus demo = new ImagePlus();
+		demo.setProcessor(cropped);
+		FileSaver saver=new FileSaver(demo);
+		saver.saveAsTiff("/home/seppho/lenas/cropped_lena.tif");
+		// -------------
+		
 		this.cover.setProcessor(stego);
-
+		// only demo
+		ImagePlus imp=new ImagePlus();
+		imp.setProcessor(stego);
+		FileSaver save_stego=new FileSaver(imp);
+		save_stego.saveAsTiff("/home/seppho/lenas/stego_lena.tif");
+		// --------------
 	}
 
 }
