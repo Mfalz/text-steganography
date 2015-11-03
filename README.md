@@ -1,4 +1,4 @@
-# text-steganography
+# Text-steganography
 Steganography tool that allow to embed text inside chosen images. The main purpose for developing of this project is for learn Java.Swing.
 The steganography process is implemented using the ImageJ processor
 
