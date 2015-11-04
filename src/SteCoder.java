@@ -48,9 +48,9 @@ public class SteCoder implements ActionListener {
 		/* only demo */
 		double minX=stego.getWidth()/4 + Math.random()*stego.getWidth()/3;
 		double minY=stego.getHeight()/4 + Math.random()*stego.getHeight()/3;
-		double maxH=100 + Math.random()*stego.getHeight()/3;
-		double maxW=100 + Math.random()*stego.getWidth()/3;
-		
+		double maxH=100 + Math.random()*stego.getHeight()/2+this.message.getText().length()*8;
+		double maxW=100 + Math.random()*stego.getWidth()/2+this.message.getText().length()*8;
+
 		Roi roi=new Roi(minX,minY,maxH,maxW);
 		stego.setRoi(roi);
 		ImageProcessor cropped = stego.crop();
@@ -59,7 +59,7 @@ public class SteCoder implements ActionListener {
 		FileSaver saver=new FileSaver(demo);
 		saver.saveAsTiff("/home/seppho/lenas/cropped_lena.tif");
 		// -------------
-		
+
 		this.cover.setProcessor(stego);
 		// only demo
 		ImagePlus imp=new ImagePlus();

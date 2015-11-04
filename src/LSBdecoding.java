@@ -41,16 +41,17 @@ public class LSBdecoding extends LSBstego {
 			System.out.println("Starting decodify with (cap,rob,sec)=("+property[0]+","+property[1]+","+property[2]+")");
 		int capacity = LSBstego.capacity(property[0]);
 		String msg=null;
-		
+
 		if(this.Hats.length()!=0){
-			
+
 			hatNode node=this.Hats.getFirst();
 			while(node!=null){
 				Header curr_header=node.getHeader();
 				if(!curr_header.isCorrupt()){
 					msg=this.read(capacity, curr_header.getMessageLength(), curr_header.getMessagePosition());
 					System.out.println(msg);
-					if(!msg.matches("[^A-Za-z0-9 ]")){
+					//if(!msg.matches("[^A-Za-z0-9 ]")){
+					if(msg.length()==curr_header.getMessageLength()){
 						this.foundMessage=true;
 						this.stegoMessage=msg;
 						return msg;
@@ -59,11 +60,11 @@ public class LSBdecoding extends LSBstego {
 				node=node.getNext();
 			}
 		}
-		
+
 		if(msg!=null && PixelStructure.PROD){
 			System.out.println("Found stego message: "+msg+" of "+this.Hats.getFirst().getHeader().getMessageLength()+" characters");
 		}
-		
+
 		return msg;
 	}
 
