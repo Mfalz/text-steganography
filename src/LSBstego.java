@@ -75,7 +75,7 @@ class LSBstego{
 		while(p_hat<((width*height)-(8*HAT_length))){
 			if(p_hat%20000==0)
 				System.out.print(". ");
-			
+
 			String payload=this.read(3,LSBstego.HAT.length(),p_hat);
 
 			if(payload.compareTo(LSBstego.HAT)==0){
@@ -95,7 +95,7 @@ class LSBstego{
 				//System.out.println("Probably HAT at "+p_hat+" : "+payload);
 				p_hat+=1;
 			}
-			
+
 		}
 		System.out.println();
 		if(PixelStructure.PROD)
@@ -224,10 +224,9 @@ class LSBstego{
 		img_length/=2;
 		if(r<=0)r=1;
 		int max=((img_length/LSBstego.METADATA_SIZE)+(m_length*8)+1);
-		int ret = (100/r)*(max/10);
-
-		System.out.println(ret);
-		return ret;
+		float ret = 100+(r*max)/100;
+		System.out.println("r: "+ r +" robustness:" + ret + " -- max: " + max);
+		return (int)ret;
 	}
 
 	public static int security(int s) {
