@@ -40,21 +40,31 @@ public class LSBdecoding extends LSBstego {
 		if(PixelStructure.PROD)
 			System.out.println("Starting decodify with (cap,rob,sec)=("+property[0]+","+property[1]+","+property[2]+")");
 		int capacity = LSBstego.capacity(property[0]);
-		if(this.Hats.getFirst()!=null){
-			String msg=new String();
-			msg=this.read(capacity, this.Hats.getFirst().getHeader().getMessageLength(), this.Hats.getFirst().getHeader().getMessagePosition());
-			if(msg!=null){
-				this.foundMessage=true;
-				this.stegoMessage=msg;
+		String msg=null;
+		
+		if(this.Hats.length()!=0){
+			
+			hatNode node=this.Hats.getFirst();
+			while(node!=null){
+				Header curr_header=node.getHeader();
+				if(!curr_header.isCorrupt()){
+					msg=this.read(capacity, curr_header.getMessageLength(), curr_header.getMessagePosition());
+					System.out.println(msg);
+					if(!msg.matches("[^A-Za-z0-9 ]")){
+						this.foundMessage=true;
+						this.stegoMessage=msg;
+						return msg;
+					};
+				}
+				node=node.getNext();
 			}
-
-			if(msg!=null && PixelStructure.PROD){
-				System.out.println("Found stego message: "+msg+" of "+this.Hats.getFirst().getHeader().getMessageLength()+" characters");
-			}
-			return msg;
 		}
-
-		return null;
+		
+		if(msg!=null && PixelStructure.PROD){
+			System.out.println("Found stego message: "+msg+" of "+this.Hats.getFirst().getHeader().getMessageLength()+" characters");
+		}
+		
+		return msg;
 	}
 
 	public boolean hasMessage() {

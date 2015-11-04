@@ -51,7 +51,6 @@ public class Header{
 		System.out.println("property: "+property[0]+","+property[1]+","+property[2]);
 		for(int i=0;i<size+2;i++)
 			this.pixels[position+i].print();
-			//this.header[i].print();
 	}
 
 	public int getMessageLength(){
@@ -82,7 +81,8 @@ public class Header{
 		int cap=this.property[0];
 		int rob=this.property[1];
 		int sec=this.property[2];
-		if(cap<0 || rob<0 || sec<0)return true;
+		if(cap<0 || rob<0 || sec<0)
+			return true;
 		if((cap+rob+sec)>=99 && (cap+rob+sec)<=100)
 			return false;
 		return true;

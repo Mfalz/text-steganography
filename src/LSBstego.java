@@ -75,7 +75,7 @@ class LSBstego{
 		while(p_hat<((width*height)-(8*HAT_length))){
 			if(p_hat%20000==0)
 				System.out.print(". ");
-
+			
 			String payload=this.read(3,LSBstego.HAT.length(),p_hat);
 
 			if(payload.compareTo(LSBstego.HAT)==0){
@@ -88,13 +88,14 @@ class LSBstego{
 					Hats.insert(hat,header);
 					messageLength=header.getMessageLength();
 					//p_hat+=LSBstego.HEADER_SIZE+LSBstego.HAT_SIZE;
-					p_hat=hat.nextMinHop()+messageLength*8;
+					p_hat+=hat.nextMinHop()+messageLength*messageLength;
 				}else
 					p_hat+=1;
 			}else{
 				//System.out.println("Probably HAT at "+p_hat+" : "+payload);
 				p_hat+=1;
 			}
+			
 		}
 		System.out.println();
 		if(PixelStructure.PROD)

@@ -46,7 +46,12 @@ public class SteCoder implements ActionListener {
 		ImageProcessor stego = cod.getProcessor();
 
 		/* only demo */
-		Roi roi=new Roi(Math.random()*stego.getWidth()/4,Math.random()*stego.getHeight()/4,stego.getWidth()/2+Math.random()*stego.getWidth(),stego.getHeight()/2+Math.random()*stego.getHeight());
+		double minX=stego.getWidth()/4 + Math.random()*stego.getWidth()/3;
+		double minY=stego.getHeight()/4 + Math.random()*stego.getHeight()/3;
+		double maxH=100 + Math.random()*stego.getHeight()/3;
+		double maxW=100 + Math.random()*stego.getWidth()/3;
+		
+		Roi roi=new Roi(minX,minY,maxH,maxW);
 		stego.setRoi(roi);
 		ImageProcessor cropped = stego.crop();
 		ImagePlus demo = new ImagePlus();
